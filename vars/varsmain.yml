@@ -1,0 +1,23 @@
+---
+aws_access_key: "AKIA6FOHJEI2EGUJMRGW"
+aws_secrect_key: "zAvdivS0rdHIZ4BiXqvvqg41+3xaUHFXuwo+7HB6"
+region: "us-east-1"
+
+#vpc
+vpc_cidr: "10.10.0.0./24"
+vpc_name: "rajat_vpc"
+#subnet
+subnet_name: "rajat_subnet"
+subnet_cidr: 10.10.0.0/26
+igw_name: "rajat_igw"
+
+#route_table_name
+
+route_name: "rajat-rt"
+security_group: "rajat-sg"
+ec2_tag: "rajat"
+
+#key location 
+
+ec2_key_directory: "/home/key"
+keypair_name: "rajat-key"

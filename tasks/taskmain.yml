@@ -1,0 +1,108 @@
+-name: create VPC
+  ec2 vpe_net:
+    name: "{{t vpc_name}}"
+    cidr block: "{{ vpe cidr )}}"
+    region: "region"
+    state: "present"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+ register:vpc
+
+-name: Set VPC ID in variable
+ set fact:
+   vpc_id: "{{ vpc.vpc.id }}"
+
+-name: associate subnet to the Vpc
+ ec2_vpc_subnet:
+  state: "present"
+  vpc_id: "{{vpc_id}}"
+  region: " region "
+  cidr: "it subnet_cidr }}"
+  aws_access_key: "{{aws_access_key }}"
+  aws_secret_ key: "{{aws_secret_key }}"
+  map public: yes
+ resource_tags:
+   Name: "{{subnet_name}}"
+  register: subnet
+name: create IGW
+ec2_vpc_igw:
+ vpeid: "( vpeid ))"
+ region: "{{region}}"
+ aws_access_key: "{{aws_access_key }}"
+ aws_secret_key: "{{aws_secret_key}}"
+ state: "present"
+tags:
+  Name: "{{igw_name}}"
+register: igw
+
+-name: Route IGW
+ec2_vpo_route_table:
+  vpc id: "{{ vpc_id}}"
+  region: "{{region}}"
+  aws_access_key: "{{aws_access_key}}"
+  aws_secret key: "{{aws_secret_key}}"
+  subnets:
+    -"{{subnet.subnet.id}}"
+  routes:
+    -dest: o.0.0.0/0
+     gatewayid: "{{igw. gateway_id}}"
+tags:
+Name: "{{route_name }}"
+
+-name: Create Security Group
+ec2 group:
+ name: Web 
+ description:  Security Group
+ vpcid: "{{vpc_id }}"
+ region: "{{region}}"
+ aws_access_key : "{{aws_access_key}}"
+ aws secret_key: "{{aws_secret_key}}"
+ rules:
+  -proto: tcp
+   ports:
+   -80
+  cidr_ip: 0.0.0.0/0
+  proto: tcp
+  ports:
+  -22
+  cidr_ip: 0.0.0.0/0
+register: security_group
+
+-name: create a new ec2 key pair, returns generated private key
+ ec2 key:
+  aws_access_key: "{{ aws_access_key }}"
+  aws_secret key: "{{  aws_secret_key }}"
+  name: "{{keypair_name}}"
+  region: "{{region}}"
+register: keypair
+tags:
+ -production-key
+
+-name: COpY ECz Key Palr private key ocaliy
+ copy: content=( keypair.key.private_key }}" dest={{ec2_key_directory}} production.pem
+when: keypair.changed == true
+tags:
+  --production-key
+
+ 
+-name: Create EC2 Instance
+ec2:
+ image: ami-467ca739
+ wait: yes
+
+
+
+
+-name: create ec instance
+ ec2:
+  image: ami-467ca739
+  wait: yes
+  instance_type: t2.micro
+  region: "{{region}}"
+  group_id: "{{security_group.group.id}}"
+  vpc_subnet_id: "{{subnet.subnet.id}}"
+  key_name: "{{keypair.key.name}}"
+  instance_tags: 
+        name: production
+  aws_access_key: "{{aws_acess_key}}"
+  aws_secrect_key: "{{aws_secrect_key}}"
