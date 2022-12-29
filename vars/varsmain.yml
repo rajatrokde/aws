@@ -1,6 +1,6 @@
 ---
-aws_access_key: "AKIA6FOHJEI2EGUJMRGW"
-aws_secrect_key: "zAvdivS0rdHIZ4BiXqvvqg41+3xaUHFXuwo+7HB6"
+aws_access_key: ""
+aws_secrect_key: ""
 region: "us-east-1"
 
 #vpc
